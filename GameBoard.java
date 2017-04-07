@@ -7,19 +7,76 @@
 
 import java.util.*;
 
-pulic class GameBoard
+public class GameBoard
 {
-	public char[] field;
+	public char[][] field;
+	private int len; //size of the grid
 	
-	GameBoard()
+	GameBoard() //Generates a board
 	{
-		int randomNum = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-		//This generates a random number
-		//Need to initialize a 5x5 array of '-'
+		len = 6;
+		
+		//Random Number Generator
+		//int randomNum = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+		//Put a method that checks "validSpace()", where True is when the space is a '-'
+		field = new char[len][len];
+		
+		for(int i = 0; i < len; i++)
+		{
+			for(int j = 0; j < len; j++)
+			{
+				//Creates a border of '+' around the array.
+				if(i == 0 || i == len - 1 || j == 0 || j == len -1 )
+				{
+					field[i][j] = '+';
+				}
+				else
+				{
+					field[i][j] = '-';
+				}
+			}
+		}
+	}
+	GameBoard(int length)
+	{
+		len = length;
+		
+		//Random Number Generator
+		//int randomNum = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+		//Put a method that checks "validSpace()", where True is when the space is a '-'
+		field = new char[len][len];
+		
+		for(int i = 0; i < len; i++)
+		{
+			for(int j = 0; j < len; j++)
+			{
+				//Creates a border of '+' around the array.
+				if(i == 0 || i == len - 1 || j == 0 || j == len -1 )
+				{
+					field[i][j] = '+';
+				}
+				else
+				{
+					field[i][j] = '-';
+				}
+			}
+		}
+		
 	}
 	public String getBoard()
 	{
-		//Prints board into a string
+		String temp = "";
+		
+		for(int i = 0; i < len; i++)
+		{
+			for(int j = 0; j < len; j++)
+			{
+				temp += field[i][j];
+			}
+			temp += '\n';
+		}
+		
+		return temp;
 	}
 	public void addPiece(int x, int y)
 	{
@@ -32,5 +89,13 @@ pulic class GameBoard
 	public boolean checkWin()
 	{
 		//Checks if all points have been collected from board
+		return true;
 	}
-}
+	
+	//This is a checker method
+	public static void main(String[] args)
+	{
+		GameBoard board = new GameBoard();
+		System.out.println(board.getBoard());		
+	}
+}//GameBoard

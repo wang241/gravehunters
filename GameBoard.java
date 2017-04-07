@@ -52,7 +52,7 @@ public class GameBoard
 			for(int j = 0; j < len; j++)
 			{
 				//Creates a border of '+' around the array.
-				if(i == 0 || i == len - 1 || j == 0 || j == len -1 )
+				if(i == 0 || i == len - 1 || j == 0 || j == len - 1 )
 				{
 					field[i][j] = '+';
 				}
@@ -81,13 +81,59 @@ public class GameBoard
 	}
 	public void addPiece(int x, int y)
 	{
-		//Replaces '-' with another thing.
-		field[x][y] = 'O';
+		//Replaces '-' with another thing if correct numbers are entered
+		outerloop:
+		for(int i = 0; i < len; i++)
+		{
+			for(int j = 0; j < len; j++)
+			{
+				if(x <= 0 || x >= len - 1 || y <= 0 || y >= len - 1)
+				{
+					System.out.println("INCORRECT MOVE.");
+					break outerloop;
+				}
+
+				else if (field[x][y] == 'O')
+				{
+					System.out.println("THERE IS ALREADY A PIECE AT THAT SPACE.");
+					break outerloop;
+				}
+
+				else
+				{
+					field[x][y] = 'O';
+					break outerloop;
+				}
+			}
+		}
 	}
 	public void remPiece(int x, int y)
 	{
-		//Replaces spaces with '-'
-		field[x][y] = '-';
+		//Replaces spaces with '-' if correct numbers are entered
+		outerloop2:
+		for(int i = 0; i < len; i++)
+		{
+			for(int j = 0; j < len; j++)
+			{
+				if(x <= 0 || x >= len - 1 || y <= 0 || y >= len - 1)
+				{
+					System.out.println("INCORRECT MOVE.");
+					break outerloop2;
+				}
+
+				else if (field[x][y] == '-')
+				{
+					System.out.println("THAT SPACE IS ALREADY EMPTY.");
+					break outerloop2;
+				}
+
+				else
+				{
+					field[x][y] = 'O';
+					break outerloop2;
+				}
+			}
+		}
 	}
 	public boolean checkWin()
 	{
@@ -98,10 +144,15 @@ public class GameBoard
 	//This is a checker method
 	public static void main(String[] args)
 	{
+		//Test if addPiece works
+		Scanner input = new Scanner(System.in);
+		System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE X AXIS (CHOOSE # FROM 1-4)");
+		int x = input.nextInt();
+		System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE Y AXIS (CHOOSE # FROM 1-4)");
+		int y = input.nextInt();
 
-		//addPiece(1,1);
 		GameBoard board = new GameBoard();
-		board.addPiece(1,1);
+		board.addPiece(x,y);
 		System.out.println(board.getBoard());
 		board.remPiece(1,1);
 		System.out.println(board.getBoard());

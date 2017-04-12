@@ -11,15 +11,15 @@ public class GameBoard
 {
 	public char[][] field;
 	private int len; //size of the grid
+	private int numO; //number of obstacles
+	private int numP; //number of points
 
 	GameBoard() //Generates a board
 	{
 		len = 6;
-
-		//Random Number Generator
-		//int randomNum = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-		//Put a method that checks "validSpace()", where True is when the space is a '-'
-
+		numP = len / 3;
+		numO = len / 4;		
+		
 		field = new char[len][len]; //6x6 character array
 
 		for(int i = 0; i < len; i++)
@@ -37,32 +37,38 @@ public class GameBoard
 				}
 			}
 		}
-	}
-	GameBoard(int length)
-	{
-		len = length;
 
-		//Random Number Generator
-		//int randomNum = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-		//Put a method that checks "validSpace()", where True is when the space is a '-'
-		field = new char[len][len];
-
-		for(int i = 0; i < len; i++)
+		//Place objects on the board
+		int temp = 0; //counter
+		while( temp <= numO )
 		{
-			for(int j = 0; j < len; j++)
+			//Random Number Generator
+			Random gen = new Random();
+			int x = gen.nextInt(len) + 1;
+			int y = gen.nextInt(len) + 1;
+		
+			//Checks x for valid number
+			while(!checkMove(x))
 			{
-				//Creates a border of '+' around the array.
-				if(i == 0 || i == len - 1 || j == 0 || j == len - 1 )
-				{
-					field[i][j] = '+';
-				}
-				else
-				{
-					field[i][j] = '-';
-				}
+				x = gen.nextInt(len) + 1;
 			}
+			while(!checkMove(y))
+			{
+				y = gen.nextInt(len) + 1;
+			}
+			
+			field[x][y] = 'x';
+			
+			temp++; //increment counter
 		}
-
+	}
+	public boolean checkMove(int num) //Checks if space exists on the board
+	{
+		if( num < 0 || num > len - 1 )
+		{
+			return false;
+		}		
+		return true;
 	}
 	public String getBoard()
 	{
@@ -154,7 +160,7 @@ public class GameBoard
 		GameBoard board = new GameBoard();
 		board.addPiece(x,y);
 		System.out.println(board.getBoard());
-		board.remPiece(1,1);
-		System.out.println(board.getBoard());
+		//board.remPiece(1,1);
+		//System.out.println(board.getBoard());
 	}
 }//GameBoard

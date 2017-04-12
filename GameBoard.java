@@ -14,11 +14,11 @@ public class GameBoard
 	private int numO; //number of obstacles
 	private int numP; //number of points
 
-	GameBoard() //Generates a board
+	GameBoard(int length) //Generates a board
 	{
-		len = 6;
+		len = length;
 		numP = len / 3;
-		numO = len / 4;		
+		numO = len / 4;
 		
 		field = new char[len][len]; //6x6 character array
 
@@ -37,34 +37,39 @@ public class GameBoard
 				}
 			}
 		}
-
+		
+		addItem(numP, len, '*');
+		addItem(numO, len, 'x');
+	}
+	public void addItem(int numObjects, int lengthBoard, char piece)
+	{
 		//Place objects on the board
 		int temp = 0; //counter
-		while( temp <= numO )
+		while( temp <= numObjects )
 		{
 			//Random Number Generator
 			Random gen = new Random();
-			int x = gen.nextInt(len) + 1;
-			int y = gen.nextInt(len) + 1;
+			int x = gen.nextInt(lengthBoard - 2) + 1;
+			int y = gen.nextInt(lengthBoard - 2) + 1;
 		
 			//Checks x for valid number
-			while(!checkMove(x))
+			while(!checkSpace(x))
 			{
-				x = gen.nextInt(len) + 1;
+				x = gen.nextInt(lengthBoard - 2) + 1;
 			}
-			while(!checkMove(y))
+			while(!checkSpace(y))
 			{
-				y = gen.nextInt(len) + 1;
+				y = gen.nextInt(lengthBoard - 2) + 1;
 			}
 			
-			field[x][y] = 'x';
+			field[x][y] = piece;
 			
 			temp++; //increment counter
-		}
+		}		
 	}
-	public boolean checkMove(int num) //Checks if space exists on the board
+	public boolean checkSpace(int num) //Checks if space exists on the board
 	{
-		if( num < 0 || num > len - 1 )
+		if( num < 0 || num > len )
 		{
 			return false;
 		}		
@@ -151,14 +156,14 @@ public class GameBoard
 	public static void main(String[] args)
 	{
 		//Test if addPiece works
-		Scanner input = new Scanner(System.in);
-		System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE X AXIS (CHOOSE # FROM 1-4)");
-		int x = input.nextInt();
-		System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE Y AXIS (CHOOSE # FROM 1-4)");
-		int y = input.nextInt();
+		//Scanner input = new Scanner(System.in);
+		//System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE X AXIS (CHOOSE # FROM 1-4)");
+		//int x = input.nextInt();
+		//System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE Y AXIS (CHOOSE # FROM 1-4)");
+		//int y = input.nextInt();
 
-		GameBoard board = new GameBoard();
-		board.addPiece(x,y);
+		GameBoard board = new GameBoard(10);
+		//board.addPiece(x,y);
 		System.out.println(board.getBoard());
 		//board.remPiece(1,1);
 		//System.out.println(board.getBoard());

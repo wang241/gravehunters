@@ -13,6 +13,8 @@ public class GameBoard
 	private int len; //size of the grid
 	private int numO; //number of obstacles
 	private int numP; //number of points
+	private int score1;
+	private int score2;
 
 	GameBoard(int length) //Generates a board
 	{
@@ -66,6 +68,36 @@ public class GameBoard
 			
 			temp++; //increment counter
 		}		
+	}
+	//Checks the content of a proposed move, returns a boolean if the move is valid, adds a point to the scoreboard.
+	public boolean checkMove(int x, int y, int player)
+	{
+		if(field[x][y] == '-')
+		{
+			return true;
+		}
+		else if(field[x][y] == '*')
+		{
+			addScore(player);
+			return true;
+		}
+		return false;
+	}
+	//Accesses the private variable of score, using player number to distinguish
+	public void addScore(int player)
+	{
+		if(player == 1)
+		{
+			score1++;
+		}
+		else if(player == 2)
+		{
+			score2++;
+		}
+	}
+	public String getScore()
+	{
+		return "Player 1: " + score1 + "|" + "Player 2: " + score2;
 	}
 	public boolean checkSpace(int num) //Checks if space exists on the board
 	{
@@ -156,16 +188,18 @@ public class GameBoard
 	public static void main(String[] args)
 	{
 		//Test if addPiece works
-		//Scanner input = new Scanner(System.in);
-		//System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE X AXIS (CHOOSE # FROM 1-4)");
-		//int x = input.nextInt();
-		//System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE Y AXIS (CHOOSE # FROM 1-4)");
-		//int y = input.nextInt();
+		Scanner input = new Scanner(System.in);
+		System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE X AXIS (CHOOSE # FROM 1-" + length + ")");
+		int x = input.nextInt();
+		System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE Y AXIS (CHOOSE # FROM 1-" + length + ")");
+		int y = input.nextInt();
 
 		GameBoard board = new GameBoard(10);
-		//board.addPiece(x,y);
+		board.addPiece(x,y);
 		System.out.println(board.getBoard());
-		//board.remPiece(1,1);
-		//System.out.println(board.getBoard());
+		board.remPiece(1,1);
+		System.out.println(board.getBoard());
+		
+		System.out.prinln(board.getScore());
 	}
 }//GameBoard

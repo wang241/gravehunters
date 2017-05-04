@@ -6,3 +6,4 @@ Multiplayer game
 <br>Still required: Player movement.
 <br>4/12/2017: Edited the board generation to generate 'x' obstacles and '*' points
 <br>4/20/2017: Added README.md, added three new methods for game logic.
+<br>5/4/2017: Client program now terminates if user types "quit" and presses enter.

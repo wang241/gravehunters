@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class GameClient.java
+public class GameClient
 {
 	public static void main(String[] args)
 	{
@@ -34,16 +34,17 @@ public class GameClient.java
 			while (true)
 			{
 				String data = keyboard.nextLine();
-				if(data.toLowerCase().indexOf("QUIT"))//Quit code
-				{
-					serverOutput.writeBytes("Connection Terminated by Client.");
-					break;
-				}
 				serverOutput.writeBytes(data + "\n");
+				if(data.toLowerCase().indexOf("quit") != -1)//Quit code
+				{
+					System.out.println("Closed by user" + connectionSock);
+					connectionSock.close();
+				}
 			}
 		}
 		catch (IOException e)
 		{
+			System.out.println("This is GameClient.java");
 			System.out.println(e.getMessage());
 		}
 	}

@@ -45,7 +45,9 @@ public class ClientListener implements Runnable
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error: " + e.toString());
+			System.out.println("This is ClientListener.java");
+			//System.out.println("Error: " + e.toString());
+			System.out.println("Press to quit.");
 		}
 	}
-} // ClientListener for MTClient
+} // ClientListener for GameClient

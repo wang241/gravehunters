@@ -24,6 +24,8 @@ public class ClientListener implements Runnable
        		 // Wait for data from the server.  If received, output it.
 		try
 		{
+			GameBoard board = new GameBoard(10);
+			
 			BufferedReader serverInput = new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
 			
 			while (true)
@@ -47,7 +49,7 @@ public class ClientListener implements Runnable
 		{
 			System.out.println("This is ClientListener.java");
 			//System.out.println("Error: " + e.toString());
-			System.out.println("Press to quit.");
+			System.out.println("Press enter to quit.");
 		}
 	}
 } // ClientListener for GameClient

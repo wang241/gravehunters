@@ -1,6 +1,7 @@
 //GameServer.java
 //Creates a game server, using the MTChat/Nim ideas
 //Receives moves from the client
+//GameServer.java
 //Author(s): Elizabeth Wang, Sarah Chong
 //Adapted from https://github.com/ChapmanCPSC353/mtchat
 

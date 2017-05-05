@@ -13,13 +13,20 @@ public class ClientHandler implements Runnable
 {
 	private Socket connectionSock = null;
 	private ArrayList<Socket> socketList;
+	private int player;
 
 	ClientHandler(Socket sock, ArrayList<Socket> socketList)
 	{
+		player = socketList.size(); //Assigns player number via order socket list.
 		this.connectionSock = sock;
 		this.socketList = socketList;	// Keep reference to master list
 	}
-
+	
+	public char getPlayer()
+	{
+		char temp = (char)player;
+		return temp;
+	}
 	public void run()
 	{
         		// Get data from a client and send it to everyone else
@@ -34,7 +41,8 @@ public class ClientHandler implements Runnable
 				String clientText = clientInput.readLine();
 				if (clientText != null)
 				{
-					System.out.println("Received: " + clientText);
+					//Allows for server log to know which player is inputting what.
+					System.out.println("From " + player + ": " + clientText);
 					// Turn around and output this data
 					// to all other clients except the one
 					// that sent us this information
@@ -43,15 +51,8 @@ public class ClientHandler implements Runnable
 						if (s != connectionSock)
 						{
 							DataOutputStream clientOutput = new DataOutputStream(s.getOutputStream());
-							clientOutput.writeBytes(clientText + "\n");
+							clientOutput.writeBytes("Player " + player + ": " + clientText + "\n");
 						}
-					}
-					if(clientText.toLowerCase().indexOf("quit") != -1)//Quit code
-					{
-						System.out.println("Closed by user" + connectionSock);
-						socketList.remove(connectionSock);
-						connectionSock.close();
-						break;
 					}
 				}
 				else

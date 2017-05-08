@@ -17,10 +17,14 @@ public class GameServer
 {
 	// Maintain list of all client sockets for broadcast
 	private ArrayList<Socket> socketList;
+	public static GameBoard gb;
+	private static boolean player = true;
+	private static boolean turn = true;
 
 	public GameServer()
 	{
 		socketList = new ArrayList<Socket>();
+		gb = new GameBoard(10);
 	}
 
 	private void getConnection()
@@ -58,4 +62,47 @@ public class GameServer
 		GameServer server = new GameServer();
 		server.getConnection();
 	}
+
+	public static boolean FirstPlayer()
+	{
+		boolean value = true;
+
+		if (player == true)
+		{
+			player = false; //changes turn to other player
+			value = true;
+	 	}
+
+	 	else if (player == false)
+	 	{
+			value = false;
+		}
+
+		return value;
+	}
+
+	//assigns turns to players
+	public static void Turn()
+	{
+		System.out.print(turn);
+
+		if (turn == true)
+		{
+			turn = false;
+		}
+
+		else
+		{
+			turn = true;
+		}
+
+		System.out.print(turn);
+	}
+
+	public static boolean getTurn()
+	{
+	return turn;
+	}
+
+
 } // GameServer

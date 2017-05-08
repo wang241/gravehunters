@@ -1,51 +1,108 @@
-//GameClient.java
-//Adapted from https://github.com/ChapmanCPSC353/mtchat/
+//GameServer.java
+//Creates a game server, using the MTChat/Nim ideas
+//Receives moves from the client
+//GameServer.java
+//Author(s): Elizabeth Wang, Sarah Chong
+//Adapted from https://github.com/ChapmanCPSC353/mtchat
 
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.DataOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.util.Scanner;
+import java.util.ArrayList;
 
-public class GameClient
+public class GameServer
 {
-	public static void main(String[] args)
+	// Maintain list of all client sockets for broadcast
+	private ArrayList<Socket> socketList;
+	public static GameBoard gb;
+	private static boolean player = true;
+	private static boolean turn = true;
+
+	public GameServer()
 	{
+		socketList = new ArrayList<Socket>();
+		gb = new GameBoard(10);
+	}
+
+	private void getConnection()
+	{
+		// Wait for a connection from the client
 		try
 		{
-			String hostname = "localhost";
-			int port = 7654;
-
-			System.out.println("Connecting to server on port " + port);
-			Socket connectionSock = new Socket(hostname, port);
-
-			DataOutputStream serverOutput = new DataOutputStream(connectionSock.getOutputStream());
-
-			System.out.println("Connection made.");
-
-			// Start a thread to listen and display data sent by the server
-			ClientListener listener = new ClientListener(connectionSock);
-			Thread theThread = new Thread(listener);
-			theThread.start();
-
-			// Read input from the keyboard and send it to everyone else.
-			Scanner keyboard = new Scanner(System.in);
+			System.out.println("Waiting for client connections on port 7654.");
+			ServerSocket serverSock = new ServerSocket(7654);
+			// This is an infinite loop, the user will have to shut it down
+			// using control-c
 			while (true)
 			{
-				String data = keyboard.nextLine();
-				serverOutput.writeBytes(data + "\n");
-				if(data.toLowerCase().indexOf("quit") != -1)//Quit code
-				{
-					System.out.println("Closed by user" + connectionSock);
-					connectionSock.close();
-				}
+				Socket connectionSock = serverSock.accept();
+				// Add this socket to the list
+				socketList.add(connectionSock);
+				// Send to ClientHandler the socket and arraylist of all sockets
+				ClientHandler handler = new ClientHandler(connectionSock, this.socketList);
+				Thread theThread = new Thread(handler);
+				theThread.start();
 			}
+			// Will never get here, but if the above loop is given
+			// an exit condition then we'll go ahead and close the socket
+			//serverSock.close();
 		}
 		catch (IOException e)
 		{
-			System.out.println("This is GameClient.java");
+			System.out.println("This is GameServer.java");
 			System.out.println(e.getMessage());
 		}
 	}
-} //GameClient
+
+	public static void main(String[] args)
+	{
+		GameServer server = new GameServer();
+		server.getConnection();
+	}
+
+	public static boolean FirstPlayer()
+	{
+		boolean value = true;
+
+		if (player == true)
+		{
+			player = false; //changes turn to other player
+			value = true;
+	 	}
+
+	 	else if (player == false)
+	 	{
+			value = false;
+		}
+
+		return value;
+	}
+
+	//assigns turns to players
+	public static void Turn()
+	{
+		System.out.print(turn);
+
+		if (turn == true)
+		{
+			turn = false;
+		}
+
+		else
+		{
+			turn = true;
+		}
+
+		System.out.print(turn);
+	}
+
+	public static boolean getTurn()
+	{
+	return turn;
+	}
+
+
+} // GameServer

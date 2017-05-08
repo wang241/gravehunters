@@ -43,7 +43,7 @@ public class GameBoard
 		addItemRan(numP, len, '*');
 		addItemRan(numO, len, 'x');
 	}
-	
+
 	//Place objects on the board at random
 	public void addItemRan(int numObjects, int lengthBoard, char piece)
 	{
@@ -70,7 +70,7 @@ public class GameBoard
 			i++; //increment counter
 		}
 	}
-	
+
 	//Checks the content of a proposed move, returns a boolean if the move is valid, adds a point to the scoreboard.
 	public boolean checkMove(int x, int y, int player)
 	{
@@ -84,7 +84,7 @@ public class GameBoard
 			return true;
 		}
 		return false;
-	}	
+	}
 	//Accesses the private variable of score, using player number to distinguish
 	public void addScore(int player)
 	{
@@ -97,13 +97,13 @@ public class GameBoard
 			score2++;
 		}
 	}
-	
+
 	//Prints out the current score.
 	public String getScore()
 	{
 		return "Player 1: " + score1 + " | " + "Player 2: " + score2;
 	}
-	
+
 	//Checks if space exists on the board
 	public boolean checkSpace(int num)
 	{
@@ -113,7 +113,7 @@ public class GameBoard
 		}
 		return true;
 	}
-	
+
 	//Prints current board.
 	public String getBoard()
 	{
@@ -132,12 +132,12 @@ public class GameBoard
 
 		return temp;
 	}
-	
+
 	public void addPiece(PlayerPiece p)
 	{
 		int temp_x = p.getSpace()[0];
 		int temp_y = p.getSpace()[1];
-		
+
 		if(field[temp_y][temp_x] == '-')
 		{
 			field[temp_y][temp_x] = p.getPiece();
@@ -203,7 +203,7 @@ public class GameBoard
 			}
 		}
 	}
-	
+
 	//Checks if all points have been collected from board
 	public boolean checkWin()
 	{
@@ -212,7 +212,12 @@ public class GameBoard
 			return true;
 		return false;
 	}
-	
+
+	public boolean gameOver()
+	{
+		return false;
+	}
+
 	//This is a checker method
 	public static void main(String[] args)
 	{
@@ -221,26 +226,26 @@ public class GameBoard
 		GameBoard board = new GameBoard(length);
 		PlayerPiece p1 = new PlayerPiece(1,1,'O');
 		PlayerPiece p2 = new PlayerPiece(length-2, length-2,'$');
-		
+
 		board.addPiece(p1);
 		board.addPiece(p2);
-		
+
 		System.out.println("HERE IS YOUR GAMEBOARD.");
 		System.out.println(board.getBoard());
 
 		Scanner input = new Scanner(System.in);
-		
+
 		int x = 0;
 		int y = 0;
 
 		while (!board.checkWin())
-		{	
+		{
 			/*int dx = 0;
 			int dy = 0;
-			
+
 			System.out.println("LEFT, RIGHT, UP, DOWN");
 			String temp = input.nextLine();
-			
+
 			if(temp.toLowerCase().indexOf("left") != -1)
 			{
 				dx = -1;
@@ -265,22 +270,22 @@ public class GameBoard
 			{
 				System.out.println("INVALID MOVE");
 			}*/
-			
+
 			int x_remove = x;
-			int y_remove = y;			
-			
-			System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE X AXIS (CHOOSE # FROM 1-" + (length-2) + ")");			
+			int y_remove = y;
+
+			System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE X AXIS (CHOOSE # FROM 1-" + (length-2) + ")");
 			x = input.nextInt();
 			System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE Y AXIS (CHOOSE # FROM 1-" + (length-2) + ")");
 			y = input.nextInt();
-			
+
 			if(board.checkMove(y,x,1))
 			{
 				x_remove = p1.getSpace()[0];
 				y_remove = p1.getSpace()[1];
-			
+
 				p1.newSpace(x,y);
-				
+
 				board.remPiece(y_remove,x_remove);
 				board.addPiece(y,x);
 				System.out.println(board.getBoard());

@@ -28,7 +28,7 @@ public class GameServer
 			System.out.println("Waiting for client connections on port 7654.");
 			ServerSocket serverSock = new ServerSocket(7654);
 
-			while (socketList.size() < 2)
+			while (socketList.size() < 4)
 			{
 				Socket connectionSock = serverSock.accept();
 				// Add this socket to the list

@@ -1,10 +1,3 @@
-//GameServer.java
-//Creates a game server, using the MTChat/Nim ideas
-//Receives moves from the client
-//GameServer.java
-//Author(s): Elizabeth Wang, Sarah Chong
-//Adapted from https://github.com/ChapmanCPSC353/mtchat
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.DataOutputStream;
@@ -34,9 +27,8 @@ public class GameServer
 		{
 			System.out.println("Waiting for client connections on port 7654.");
 			ServerSocket serverSock = new ServerSocket(7654);
-			// This is an infinite loop, the user will have to shut it down
-			// using control-c
-			while (true)
+
+			while (socketList.size() < 2)
 			{
 				Socket connectionSock = serverSock.accept();
 				// Add this socket to the list
@@ -48,7 +40,7 @@ public class GameServer
 			}
 			// Will never get here, but if the above loop is given
 			// an exit condition then we'll go ahead and close the socket
-			//serverSock.close();
+			serverSock.close();
 		}
 		catch (IOException e)
 		{
@@ -62,47 +54,4 @@ public class GameServer
 		GameServer server = new GameServer();
 		server.getConnection();
 	}
-
-	public static boolean FirstPlayer()
-	{
-		boolean value = true;
-
-		if (player == true)
-		{
-			player = false; //changes turn to other player
-			value = true;
-	 	}
-
-	 	else if (player == false)
-	 	{
-			value = false;
-		}
-
-		return value;
-	}
-
-	//assigns turns to players
-	public static void Turn()
-	{
-		System.out.print(turn);
-
-		if (turn == true)
-		{
-			turn = false;
-		}
-
-		else
-		{
-			turn = true;
-		}
-
-		System.out.print(turn);
-	}
-
-	public static boolean getTurn()
-	{
-	return turn;
-	}
-
-
 } // GameServer

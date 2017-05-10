@@ -45,6 +45,10 @@ public class ClientHandler implements Runnable
 						break;
 				case 2: p = new PlayerPiece2(length - 2, length - 2, '2');
 						break;
+				case 3: p = new PlayerPiece2(1, length - 2, '3');
+						break;
+				case 4: p = new PlayerPiece2(length - 2, 1, '4');
+						break;
 			}
 
 			GameServer.board.addPiece(p.getSpace()[0], p.getSpace()[1], p);
@@ -53,9 +57,9 @@ public class ClientHandler implements Runnable
 			{
 				//Game loop starts here
 				DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
-				clientOutput.writeBytes(GameServer.board.getBoard());
-				clientOutput.writeBytes(p.printScore());
-				clientOutput.writeBytes("Up, Down, Left, Right?");
+				clientOutput.writeBytes(GameServer.board.getBoard()+ "\n");
+				clientOutput.writeBytes(p.printScore()+ "\n");
+				clientOutput.writeBytes("Up, Down, Left, Right?\n");
 				// Get data sent from a client
 				String clientText = clientInput.readLine();
 				if (clientText != null)
@@ -70,7 +74,10 @@ public class ClientHandler implements Runnable
 					{
 						if (s != connectionSock)
 						{
-							//DataOutputStream clientOutput = new DataOutputStream(s.getOutputStream());
+							clientOutput = new DataOutputStream(s.getOutputStream());
+							clientOutput.writeBytes(GameServer.board.getBoard() + "\n");
+							clientOutput.writeBytes(p.printScore() + "\n");
+							clientOutput.writeBytes("Up, Down, Left, Right?\n");
 							clientOutput.writeBytes("Player " + player + ": " + clientText + "\n");
 						}
 					}

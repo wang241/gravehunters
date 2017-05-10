@@ -22,23 +22,35 @@ public class ClientHandler implements Runnable
 
 	public void run()
 	{
+		//INITIALIZATION OF PLAYER PIECES
+		PlayerPiece p1 = new PlayerPiece(1,1,'1');
+		PlayerPiece p2 = new PlayerPiece(1,8,'2');
+		PlayerPiece p3 = new PlayerPiece(8,1,'3');
+		PlayerPiece p4 = new PlayerPiece(8,8,'4');
+
 		try
 		{
 			System.out.println("Connection made with socket " + connectionSock);
 			BufferedReader clientInput = new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
 
-			//Initiate gameboard, start game logic in loop
 			//DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
 			//clientOutput.writeBytes(GameServer.gb.getBoard());
 
 			while (true)
 			{
 				// GET DATA SENT FROM A CLIENT
-				PlayerPiece p1 = new PlayerPiece(1,1,'1');
-				PlayerPiece p2 = new PlayerPiece(9,9,'2');
 
-
-				//GameServer.gb.addPiece();
+				switch(player)
+				{
+					case 1: GameServer.gb.addPiece(p1.getSpace()[0],p1.getSpace()[1],p1.getPiece());
+						break;
+					case 2: GameServer.gb.addPiece(p2.getSpace()[0],p2.getSpace()[1],p2.getPiece());
+						break;
+					case 3: GameServer.gb.addPiece(p3.getSpace()[0],p3.getSpace()[1],p3.getPiece());
+						break;
+					case 4: GameServer.gb.addPiece(p4.getSpace()[0],p4.getSpace()[1],p4.getPiece());
+						break;
+				}
 
 				String clientText = clientInput.readLine();
 				if (clientText != null)
@@ -53,9 +65,7 @@ public class ClientHandler implements Runnable
 							clientOutput.writeBytes("Player " + player + ": " + clientText + " " + "\n");
 							clientOutput.writeBytes(GameServer.gb.getBoard());
 					}
-
 				}
-
 				else
 				{
 				  	System.out.println("Closing connection for socket " + connectionSock);
@@ -64,10 +74,7 @@ public class ClientHandler implements Runnable
 				   	break;
 				}
 			}
-
-
 		}
-
 		catch (Exception e)
 		{
 			System.out.println("Error: " + e.toString());

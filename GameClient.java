@@ -44,7 +44,7 @@ public class GameClient
 		}
 		catch (IOException e)
 		{
-			System.out.println("This is GameClient.java");
+			//System.out.println("This is GameClient.java");
 			System.out.println(e.getMessage());
 		}
 	}

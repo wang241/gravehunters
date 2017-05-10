@@ -27,7 +27,7 @@ public class ClientHandler implements Runnable
 
 	public char getPlayer()
 	{
-		char temp = (char)player;
+		char temp = Integer.toString(player).charAt(0);
 		return temp;
 	}
 	public void run()
@@ -59,7 +59,7 @@ public class ClientHandler implements Runnable
 				//Game loop starts here
 				DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
 				clientOutput.writeBytes(GameServer.board.getBoard()+ "\n");
-				clientOutput.writeBytes(p.printScore()+ "\n");
+				clientOutput.writeBytes(GameServer.printScore()+ "\n");
 				clientOutput.writeBytes("Up, Down, Left, Right?\n");
 				// Get data sent from a client
 				String clientText = clientInput.readLine();
@@ -68,22 +68,29 @@ public class ClientHandler implements Runnable
 					GameServer.board.move(clientText,p);
 					//Allows for server log to know which player is inputting what.
 					System.out.println("From " + player + ": " + clientText);
+					GameServer.keepScore(p.getScore(), getPlayer());
+					//System.out.println("this is pscore" + p.getScore());
+					//System.out.println("this is player" + getPlayer());
+					//System.out.println(GameServer.printScore());
+					
 					// Turn around and output this data
 					// to all other clients except the one
 					// that sent us this information
 					for (Socket s : socketList)
 					{
-						if(GameServer.board.gameOver())
-						{
-							clientOutput.writeBytes("End of game. Type quit.\n");
-							value = false;
-						}
 						if (s != connectionSock)
 						{
 							clientOutput = new DataOutputStream(s.getOutputStream());
 							clientOutput.writeBytes(GameServer.board.getBoard() + "\n");
 							clientOutput.writeBytes(p.printScore() + "\n");
 							clientOutput.writeBytes("Up, Down, Left, Right?\n");
+							if(GameServer.board.gameOver())
+							{
+								clientOutput.writeBytes(GameServer.board.getBoard() + "\n");
+								clientOutput.writeBytes(GameServer.checkWinner()+"\n");
+								clientOutput.writeBytes("End of game. Type quit.\n");
+								value = false;
+							}
 							//clientOutput.writeBytes("Player " + player + ": " + clientText + "\n");
 						}
 					}
@@ -98,15 +105,15 @@ public class ClientHandler implements Runnable
 				   break;
 				}
 			}//end of while loop
-			DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
+			/*DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
 			for(Socket s : socketList)
 			{
 				clientOutput.writeBytes("All souls collected. Type \"quit.\" Good job!\n");
-			}
+			}*/
 		}
 		catch (Exception e)
 		{
-			System.out.println("This is ClientHandler.java");
+			//System.out.println("This is ClientHandler.java");
 			System.out.println("Error: " + e.toString());
 			// Remove from arraylist
 			socketList.remove(connectionSock);

@@ -43,6 +43,7 @@ public class ClientHandler implements Runnable
 			if (GameServer.FirstPlayer()==true)
 			{
 				DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
+				clientOutput.writeBytes(GameServer.gb.getBoard());
 				clientOutput.writeBytes("You are player 1" + "\n");
 				first = true;
 			}
@@ -50,6 +51,7 @@ public class ClientHandler implements Runnable
 			else
 			{
 				DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
+				clientOutput.writeBytes(GameServer.gb.getBoard());
 				clientOutput.writeBytes("You are player 2" + "\n");
 				first = false;
 			}
@@ -58,21 +60,25 @@ public class ClientHandler implements Runnable
 			{
 				// Get data sent from a client
 				String clientText = null;
-				boolean loop = true;
 
-				while(loop == true)
+				while(true)
 				{
 					if (GameServer.getTurn()==first)
 					{
 					DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
 					clientOutput.writeBytes("It is your turn" + "\n");
 					}
-
+					
 					clientText = clientInput.readLine();
-
+					
+					int x_axis = Character.getNumericValue(clientText.charAt(0));
+					int y_axis = Character.getNumericValue(clientText.charAt(2));
+					
+					GameServer.gb.addPiece(x_axis, y_axis);
+					
 					if (GameServer.getTurn()==first)
 					{
-						loop = false;
+						break;
 					}
 
 					else
@@ -90,12 +96,6 @@ public class ClientHandler implements Runnable
 					if(gameOver == false)
 					{
 						boolean check = false;
-
-						//reads input from players
-						while(check == false)
-						{
-							System.out.println("check = false");
-						}
 
 						if(check == false)
 						{

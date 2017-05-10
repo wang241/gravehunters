@@ -133,7 +133,7 @@ public class GameBoard
 		return temp;
 	}
 
-	public void addPiece(char new_x, char new_y, PlayerPiece p)
+	/*public void addPiece(char new_x, char new_y, PlayerPiece p)
 	{
 		int old_x = p.getSpace()[0];
 		int old_y = p.getSpace()[1];
@@ -148,8 +148,8 @@ public class GameBoard
 		{
 			System.out.println("INCORRECT MOVE.");
 		}
-	}
-	public void addPiece(int x, int y)
+	}*/
+	public void addPiece(int x, int y, char symbol)
 	{
 		//Replaces '-' with another thing if correct numbers are entered
 		outerloop:
@@ -163,7 +163,7 @@ public class GameBoard
 					break outerloop;
 				}
 
-				else if (field[x][y] == 'O')
+				else if (field[x][y] == symbol)
 				{
 					System.out.println("THERE IS ALREADY A PIECE AT THAT SPACE.");
 					break outerloop;
@@ -171,7 +171,7 @@ public class GameBoard
 
 				else
 				{
-					field[x][y] = 'O';
+					field[x][y] = symbol;
 					break outerloop;
 				}
 			}
@@ -229,8 +229,8 @@ public class GameBoard
 		PlayerPiece p1 = new PlayerPiece(1,1,'O');
 		PlayerPiece p2 = new PlayerPiece(length-2, length-2,'$');
 
-		board.addPiece('1','1',p1);
-		board.addPiece('9','9',p2);
+		//board.addPiece('1','1',p1);
+		//board.addPiece('9','9',p2);
 
 		System.out.println("HERE IS YOUR GAMEBOARD.");
 		System.out.println(board.getBoard());
@@ -259,7 +259,7 @@ public class GameBoard
 				p1.newSpace(x,y);
 
 				board.remPiece(y_remove,x_remove);
-				board.addPiece(y,x);
+				//board.addPiece(y,x);
 				System.out.println(board.getBoard());
 				System.out.println(board.getScore());
 			}

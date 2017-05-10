@@ -16,7 +16,7 @@ public class ClientHandler implements Runnable
 	private int player;
 	private int length = 10;
 	public PlayerPiece2 p;
-	
+
 
 	ClientHandler(Socket sock, ArrayList<Socket> socketList)
 	{
@@ -24,7 +24,7 @@ public class ClientHandler implements Runnable
 		this.connectionSock = sock;
 		this.socketList = socketList;	// Keep reference to master list
 	}
-	
+
 	public char getPlayer()
 	{
 		char temp = (char)player;
@@ -38,7 +38,7 @@ public class ClientHandler implements Runnable
 			System.out.println("Connection made with socket " + connectionSock);
 			BufferedReader clientInput = new BufferedReader(
 				new InputStreamReader(connectionSock.getInputStream()));
-				
+
 			switch(player)
 			{
 				case 1: p = new PlayerPiece2(1, 1, '1');
@@ -46,15 +46,16 @@ public class ClientHandler implements Runnable
 				case 2: p = new PlayerPiece2(length - 2, length - 2, '2');
 						break;
 			}
-			
+
 			GameServer.board.addPiece(p.getSpace()[0], p.getSpace()[1], p);
-			
+
 			while (!GameServer.board.gameOver()) //While the board still has '*'
 			{
 				//Game loop starts here
-				System.out.println(GameServer.board.getBoard());
-				System.out.println(p.printScore());
-				System.out.println("Up, Down, Left, Right?");
+				DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
+				clientOutput.writeBytes(GameServer.board.getBoard());
+				clientOutput.writeBytes(p.printScore());
+				clientOutput.writeBytes("Up, Down, Left, Right?");
 				// Get data sent from a client
 				String clientText = clientInput.readLine();
 				if (clientText != null)
@@ -69,7 +70,7 @@ public class ClientHandler implements Runnable
 					{
 						if (s != connectionSock)
 						{
-							DataOutputStream clientOutput = new DataOutputStream(s.getOutputStream());
+							//DataOutputStream clientOutput = new DataOutputStream(s.getOutputStream());
 							clientOutput.writeBytes("Player " + player + ": " + clientText + "\n");
 						}
 					}
@@ -84,7 +85,8 @@ public class ClientHandler implements Runnable
 				   break;
 				}
 			}//end of while loop
-			System.out.println("Game Over, all souls collected. Good job!");
+			DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
+			clientOutput.writeBytes("Game Over, all souls collected. Good job!");
 		}
 		catch (Exception e)
 		{

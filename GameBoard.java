@@ -133,14 +133,16 @@ public class GameBoard
 		return temp;
 	}
 
-	public void addPiece(PlayerPiece p)
+	public void addPiece(char new_x, char new_y, PlayerPiece p)
 	{
-		int temp_x = p.getSpace()[0];
-		int temp_y = p.getSpace()[1];
+		int old_x = p.getSpace()[0];
+		int old_y = p.getSpace()[1];
 
-		if(field[temp_y][temp_x] == '-')
+		if(field[new_y][new_x] == '-')
 		{
-			field[temp_y][temp_x] = p.getPiece();
+			field[new_y][new_x] = p.getPiece();
+			p.newSpace((int)new_x, (int)new_y);
+			field[old_y][old_x] = '-';
 		}
 		else
 		{
@@ -227,8 +229,8 @@ public class GameBoard
 		PlayerPiece p1 = new PlayerPiece(1,1,'O');
 		PlayerPiece p2 = new PlayerPiece(length-2, length-2,'$');
 
-		board.addPiece(p1);
-		board.addPiece(p2);
+		board.addPiece('1','1',p1);
+		board.addPiece('9','9',p2);
 
 		System.out.println("HERE IS YOUR GAMEBOARD.");
 		System.out.println(board.getBoard());
@@ -240,36 +242,6 @@ public class GameBoard
 
 		while (!board.checkWin())
 		{
-			/*int dx = 0;
-			int dy = 0;
-
-			System.out.println("LEFT, RIGHT, UP, DOWN");
-			String temp = input.nextLine();
-
-			if(temp.toLowerCase().indexOf("left") != -1)
-			{
-				dx = -1;
-				dy = 0;
-			}
-			else if(temp.toLowerCase().indexOf("right") != -1)
-			{
-				dx = 1;
-				dy = 0;
-			}
-			else if(temp.toLowerCase().indexOf("up") != -1)
-			{
-				dx = 0;
-				dy = 1;
-			}
-			else if(temp.toLowerCase().indexOf("down") != -1)
-			{
-				dx = 0;
-				dy = -1;
-			}
-			else
-			{
-				System.out.println("INVALID MOVE");
-			}*/
 
 			int x_remove = x;
 			int y_remove = y;

@@ -12,7 +12,7 @@ public class PlayerPiece2
 	private int score;
 	
 	//Generates a piece, stores initial location
-	PlayerPiece(int x, int y, char number)
+	PlayerPiece2(int x, int y, char number)
 	{
 		score = 0;
 		coord_x = x;
@@ -38,5 +38,20 @@ public class PlayerPiece2
 	{
 		coord_x = x;
 		coord_y = y;
+	}
+	//Updates score
+	public void score()
+	{
+		score++;
+	}
+	//Exports score as an int
+	public int getScore()
+	{
+		return score;
+	}
+	//Displays score as a formatted String
+	public String printScore()
+	{
+		return "Player " + num + ": " + score + "|";
 	}
 }//PlayerPiece

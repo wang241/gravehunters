@@ -10,8 +10,6 @@ public class Board2
 	public int len; //size of the grid
 	private int numO; //number of obstacles
 	private int numP; //number of points
-	private int score1; //score of player 1
-	private int score2; //score of player 2
 
 	Board2(int length) //Generates a board
 	{
@@ -78,29 +76,17 @@ public class Board2
 	}
 	
 	//Provides a way of accessing the player's position in reference to its own.
-	public boolean checkMove(int new_x, int new_y, PlayerPiece player)
+	public boolean checkMove(int new_x, int new_y, PlayerPiece2 player)
 	{
 		int x = player.getSpace()[0];
 		int y = player.getSpace()[1];
-		
-		int dx = new_x - x;
-		int dy = new_y - y;
-		
-		System.out.println(dx);
-		System.out.println(dy);
-		System.out.println(x);
-		System.out.println(y);
-		System.out.println(new_x);
-		System.out.println(new_y);
-		//Check if the distance between the two points is 1
-		/*if((dx == 0 && dy == 1) || (dx == 0 && dy == -1)
-			||(dx == 1 && dy == 0) || (dx == -1 && dy == 0)
-			|| new_x > 0 || new_y < len)*/
+
 		if(new_x >= 0 && new_y >= 0 && new_x < len && new_y < len)
 		{
 			if(field[new_y][new_x] == '*')
 			{
-				addScore(player.getPiece());
+				//adds one to player
+				player.score();
 				return true;
 			}
 			else if(field[new_y][new_x] == '-')
@@ -117,7 +103,8 @@ public class Board2
 			return false;
 		}
 	}
-	public void move(String command, PlayerPiece p)
+	//Makes a move based on a cardinal direction
+	public void move(String command, PlayerPiece2 p)
 	{
 		//Store the old spaces, convert the string
 		int old_x = p.getSpace()[0];
@@ -185,36 +172,19 @@ public class Board2
 		else //If the word isn't recognized, the move fails.
 			System.out.println("Invalid move.");
 	}
-	public void addPiece(int x, int y, PlayerPiece player)
+	//Directly accesses and alters the board
+	public void addPiece(int x, int y, PlayerPiece2 player)
 	{
 		field[y][x] = player.getPiece();
 	}
-	//Checks if all the points have been collected
-	public boolean gameOver()
+	//Checks if all/majority of the points have been collected
+	public boolean gameOver(PlayerPiece2 p1, PlayerPiece2 p2)
 	{
-		int total = score1 + score2;
+		int total = p1.getScore() + p2.getScore();
 		if(total == numP)
 			return true;
 		return false;
 	}
-	//Accesses the private variable of score, using player number to distinguish
-	public void addScore(int player)
-	{
-		if(player == 1)
-		{
-			score1++;
-		}
-		else if(player == 2)
-		{
-			score2++;
-		}
-	}
-	//Prints out the current score.
-	public String getScore()
-	{
-		return "Player 1: " + score1 + " | " + "Player 2: " + score2;
-	}
-
 	//Prints current board.
 	public String getBoard()
 	{
@@ -236,8 +206,8 @@ public class Board2
 	public static void main(String[] args)
 	{
 		int len = 10;
-		PlayerPiece p1 = new PlayerPiece(1, 1, '1');
-		PlayerPiece p2 = new PlayerPiece(len-2, len-2, '2');
+		PlayerPiece2 p1 = new PlayerPiece2(1, 1, '1');
+		PlayerPiece2 p2 = new PlayerPiece2(len-2, len-2, '2');
 		
 		Board2 board = new Board2(len);
 		
@@ -247,15 +217,16 @@ public class Board2
 		
 		int turn = 0;
 		
-		while(!board.gameOver())
+		while(!board.gameOver(p1, p2))
 		{
 			System.out.println(board.getBoard());
-			System.out.println(board.getScore());
+			System.out.println(p1.printScore());
 			
 			System.out.println("Enter a cardinal direction.");
 			String temp = input.next();
 			
 			board.move(temp, p1);
 		}
+		System.out.println("Game Over, all souls collected. Good job!");
 	}
 }

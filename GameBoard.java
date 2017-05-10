@@ -133,7 +133,7 @@ public class GameBoard
 		return temp;
 	}
 
-	/*public void addPiece(char new_x, char new_y, PlayerPiece p)
+	public void addPiece(char new_x, char new_y, PlayerPiece p)
 	{
 		int old_x = p.getSpace()[0];
 		int old_y = p.getSpace()[1];
@@ -148,7 +148,8 @@ public class GameBoard
 		{
 			System.out.println("INCORRECT MOVE.");
 		}
-	}*/
+	}
+
 	public void addPiece(int x, int y, char symbol)
 	{
 		//Replaces '-' with another thing if correct numbers are entered

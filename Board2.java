@@ -178,12 +178,22 @@ public class Board2
 		field[y][x] = player.getPiece();
 	}
 	//Checks if all/majority of the points have been collected
-	public boolean gameOver(PlayerPiece2 p1, PlayerPiece2 p2)
+	public boolean gameOver()
 	{
-		int total = p1.getScore() + p2.getScore();
-		if(total == numP)
-			return true;
-		return false;
+		int count = 0;
+		for(int i = 0; i < len; i++)
+		{
+			for(int j = 0; j < len; j++)
+			{
+				if(field[i][j] == '*')
+				{
+					count++;
+				}
+			}
+		}
+		if(count > 0)
+			return false;
+		return true;
 	}
 	//Prints current board.
 	public String getBoard()
@@ -217,7 +227,7 @@ public class Board2
 		
 		int turn = 0;
 		
-		while(!board.gameOver(p1, p2))
+		while(!board.gameOver())
 		{
 			System.out.println(board.getBoard());
 			System.out.println(p1.printScore());

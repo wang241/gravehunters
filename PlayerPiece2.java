@@ -52,6 +52,6 @@ public class PlayerPiece2
 	//Displays score as a formatted String
 	public String printScore()
 	{
-		return "Player " + num + ": " + score + "|";
+		return "Player " + num + ": " + score;
 	}
 }//PlayerPiece

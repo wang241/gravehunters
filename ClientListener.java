@@ -23,28 +23,16 @@ public class ClientListener implements Runnable
 	{
        		 // Wait for data from the server.  If received, output it.
 		try
-		{
-			//PlayerPiece p1 = new PlayerPiece(1,1,'1');
-			//PlayerPiece p2 = new PlayerPiece(9,9,'2');
-
-			//board.addPiece('1','1',p1);
-			//board.addPiece('9','9',p2);
-			//System.out.println(GameServer.gb.getBoard());
-
+		{			
 			BufferedReader serverInput = new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
-
+			
 			while (true)
 			{
 				// Get data sent from the server
 				String serverText = serverInput.readLine();
 				if (serverInput != null)
 				{
-					//char x_axis = serverText.charAt(2);
-					//char y_axis = serverText.charAt(0);
-
-					//board.addPiece(x_axis,y_axis,p1);
 					System.out.println(serverText);
-					//System.out.println(GameServer.gb.getBoard());
 				}
 				else
 				{

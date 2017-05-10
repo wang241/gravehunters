@@ -14,7 +14,7 @@ public class GameClient
 	{
 		try
 		{
-			String hostname = "127.0.0.1";
+			String hostname = "localhost";
 			int port = 7654;
 
 			System.out.println("Connecting to server on port " + port);

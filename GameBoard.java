@@ -43,7 +43,7 @@ public class GameBoard
 		addItemRan(numP, len, '*');
 		addItemRan(numO, len, 'x');
 	}
-
+	
 	//Place objects on the board at random
 	public void addItemRan(int numObjects, int lengthBoard, char piece)
 	{
@@ -70,7 +70,7 @@ public class GameBoard
 			i++; //increment counter
 		}
 	}
-
+	
 	//Checks the content of a proposed move, returns a boolean if the move is valid, adds a point to the scoreboard.
 	public boolean checkMove(int x, int y, int player)
 	{
@@ -84,7 +84,7 @@ public class GameBoard
 			return true;
 		}
 		return false;
-	}
+	}	
 	//Accesses the private variable of score, using player number to distinguish
 	public void addScore(int player)
 	{
@@ -97,13 +97,13 @@ public class GameBoard
 			score2++;
 		}
 	}
-
+	
 	//Prints out the current score.
 	public String getScore()
 	{
 		return "Player 1: " + score1 + " | " + "Player 2: " + score2;
 	}
-
+	
 	//Checks if space exists on the board
 	public boolean checkSpace(int num)
 	{
@@ -113,7 +113,7 @@ public class GameBoard
 		}
 		return true;
 	}
-
+	
 	//Prints current board.
 	public String getBoard()
 	{
@@ -132,25 +132,22 @@ public class GameBoard
 
 		return temp;
 	}
-
-	public void addPiece(char new_x, char new_y, PlayerPiece p)
+	
+	public void addPiece(PlayerPiece p)
 	{
-		int old_x = p.getSpace()[0];
-		int old_y = p.getSpace()[1];
-
-		if(field[new_y][new_x] == '-')
+		int temp_x = p.getSpace()[0];
+		int temp_y = p.getSpace()[1];
+		
+		if(field[temp_y][temp_x] == '-')
 		{
-			field[new_y][new_x] = p.getPiece();
-			p.newSpace((int)new_x, (int)new_y);
-			field[old_y][old_x] = '-';
+			field[temp_y][temp_x] = p.getPiece();
 		}
 		else
 		{
 			System.out.println("INCORRECT MOVE.");
 		}
 	}
-
-	public void addPiece(int x, int y, char symbol)
+	public void addPiece(int x, int y)
 	{
 		//Replaces '-' with another thing if correct numbers are entered
 		outerloop:
@@ -164,7 +161,7 @@ public class GameBoard
 					break outerloop;
 				}
 
-				else if (field[x][y] == symbol)
+				else if (field[x][y] == 'O')
 				{
 					System.out.println("THERE IS ALREADY A PIECE AT THAT SPACE.");
 					break outerloop;
@@ -172,7 +169,7 @@ public class GameBoard
 
 				else
 				{
-					field[x][y] = symbol;
+					field[x][y] = 'O';
 					break outerloop;
 				}
 			}
@@ -206,7 +203,7 @@ public class GameBoard
 			}
 		}
 	}
-
+	
 	//Checks if all points have been collected from board
 	public boolean checkWin()
 	{
@@ -215,12 +212,7 @@ public class GameBoard
 			return true;
 		return false;
 	}
-
-	public boolean gameOver()
-	{
-		return false;
-	}
-
+	
 	//This is a checker method
 	public static void main(String[] args)
 	{
@@ -229,38 +221,68 @@ public class GameBoard
 		GameBoard board = new GameBoard(length);
 		PlayerPiece p1 = new PlayerPiece(1,1,'O');
 		PlayerPiece p2 = new PlayerPiece(length-2, length-2,'$');
-
-		//board.addPiece('1','1',p1);
-		//board.addPiece('9','9',p2);
-
+		
+		board.addPiece(p1);
+		board.addPiece(p2);
+		
 		System.out.println("HERE IS YOUR GAMEBOARD.");
 		System.out.println(board.getBoard());
 
 		Scanner input = new Scanner(System.in);
-
+		
 		int x = 0;
 		int y = 0;
 
 		while (!board.checkWin())
-		{
-
+		{	
+			/*int dx = 0;
+			int dy = 0;
+			
+			System.out.println("LEFT, RIGHT, UP, DOWN");
+			String temp = input.nextLine();
+			
+			if(temp.toLowerCase().indexOf("left") != -1)
+			{
+				dx = -1;
+				dy = 0;
+			}
+			else if(temp.toLowerCase().indexOf("right") != -1)
+			{
+				dx = 1;
+				dy = 0;
+			}
+			else if(temp.toLowerCase().indexOf("up") != -1)
+			{
+				dx = 0;
+				dy = 1;
+			}
+			else if(temp.toLowerCase().indexOf("down") != -1)
+			{
+				dx = 0;
+				dy = -1;
+			}
+			else
+			{
+				System.out.println("INVALID MOVE");
+			}*/
+			
 			int x_remove = x;
-			int y_remove = y;
-
-			System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE X AXIS (CHOOSE # FROM 1-" + (length-2) + ")");
+			int y_remove = y;			
+			
+			System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE X AXIS (CHOOSE # FROM 1-" + (length-2) + ")");			
 			x = input.nextInt();
 			System.out.println("ENTER A PIECE TO ADD TO THE GAMEBOARD ON THE Y AXIS (CHOOSE # FROM 1-" + (length-2) + ")");
 			y = input.nextInt();
-
+			
 			if(board.checkMove(y,x,1))
 			{
 				x_remove = p1.getSpace()[0];
 				y_remove = p1.getSpace()[1];
-
+			
 				p1.newSpace(x,y);
-
+				
 				board.remPiece(y_remove,x_remove);
-				//board.addPiece(y,x);
+				board.addPiece(y,x);
 				System.out.println(board.getBoard());
 				System.out.println(board.getScore());
 			}

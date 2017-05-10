@@ -1,3 +1,5 @@
+//ClientHandler.java
+//Adapted from https://github.com/ChapmanCPSC353/mtchat
 
 import java.net.Socket;
 import java.io.DataOutputStream;
@@ -11,77 +13,85 @@ public class ClientHandler implements Runnable
 {
 	private Socket connectionSock = null;
 	private ArrayList<Socket> socketList;
-	public int player;
+	private int player;
+	private int length = 10;
+	public PlayerPiece2 p;
+	
 
 	ClientHandler(Socket sock, ArrayList<Socket> socketList)
 	{
-		player = socketList.size();
+		player = socketList.size(); //Assigns player number via order socket list.
 		this.connectionSock = sock;
-		this.socketList = socketList;
+		this.socketList = socketList;	// Keep reference to master list
 	}
-
+	
+	public char getPlayer()
+	{
+		char temp = (char)player;
+		return temp;
+	}
 	public void run()
 	{
-		//INITIALIZATION OF PLAYER PIECES
-		PlayerPiece p1 = new PlayerPiece(1,1,'1');
-		PlayerPiece p2 = new PlayerPiece(1,8,'2');
-		PlayerPiece p3 = new PlayerPiece(8,1,'3');
-		PlayerPiece p4 = new PlayerPiece(8,8,'4');
-
+        		// Get data from a client and send it to everyone else
 		try
 		{
 			System.out.println("Connection made with socket " + connectionSock);
-			BufferedReader clientInput = new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
-
-			//DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
-			//clientOutput.writeBytes(GameServer.gb.getBoard());
-
-			while (true)
+			BufferedReader clientInput = new BufferedReader(
+				new InputStreamReader(connectionSock.getInputStream()));
+				
+			switch(player)
 			{
-				// GET DATA SENT FROM A CLIENT
-
-				switch(player)
-				{
-					case 1: GameServer.gb.addPiece(p1.getSpace()[0],p1.getSpace()[1],p1.getPiece());
+				case 1: p = new PlayerPiece2(1, 1, '1');
 						break;
-					case 2: GameServer.gb.addPiece(p2.getSpace()[0],p2.getSpace()[1],p2.getPiece());
+				case 2: p = new PlayerPiece2(length - 2, length - 2, '2');
 						break;
-					case 3: GameServer.gb.addPiece(p3.getSpace()[0],p3.getSpace()[1],p3.getPiece());
-						break;
-					case 4: GameServer.gb.addPiece(p4.getSpace()[0],p4.getSpace()[1],p4.getPiece());
-						break;
-				}
-
+			}
+			
+			GameServer.board.addPiece(p.getSpace()[0], p.getSpace()[1], p);
+			
+			while (!GameServer.board.gameOver()) //While the board still has '*'
+			{
+				//Game loop starts here
+				System.out.println(GameServer.board.getBoard());
+				System.out.println(p.printScore());
+				System.out.println("Up, Down, Left, Right?");
+				// Get data sent from a client
 				String clientText = clientInput.readLine();
 				if (clientText != null)
 				{
-					//SENT TO SERVER
-					System.out.println("From player " + player + ": " + clientText);
-
-					// SEND TO EVERYONE
+					GameServer.board.move(clientText,p);
+					//Allows for server log to know which player is inputting what.
+					System.out.println("From " + player + ": " + clientText);
+					// Turn around and output this data
+					// to all other clients except the one
+					// that sent us this information
 					for (Socket s : socketList)
 					{
+						if (s != connectionSock)
+						{
 							DataOutputStream clientOutput = new DataOutputStream(s.getOutputStream());
-							clientOutput.writeBytes("Player " + player + ": " + clientText + " " + "\n");
-							clientOutput.writeBytes(GameServer.gb.getBoard());
+							clientOutput.writeBytes("Player " + player + ": " + clientText + "\n");
+						}
 					}
 				}
 				else
 				{
-				  	System.out.println("Closing connection for socket " + connectionSock);
-				   	socketList.remove(connectionSock);
-				   	connectionSock.close();
-				   	break;
+				  // Connection was lost
+				  System.out.println("Closing connection for socket " + connectionSock);
+				   // Remove from arraylist
+				   socketList.remove(connectionSock);
+				   connectionSock.close();
+				   break;
 				}
-			}
+			}//end of while loop
+			System.out.println("Game Over, all souls collected. Good job!");
 		}
 		catch (Exception e)
 		{
+			System.out.println("This is ClientHandler.java");
 			System.out.println("Error: " + e.toString());
-			// REMOVE FROM ARRAYLIST
+			// Remove from arraylist
 			socketList.remove(connectionSock);
 		}
 	}
-}
-
-//ClientHandler for GameServer
+} // ClientHandler for GameServer

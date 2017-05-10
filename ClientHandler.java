@@ -52,8 +52,9 @@ public class ClientHandler implements Runnable
 			}
 
 			GameServer.board.addPiece(p.getSpace()[0], p.getSpace()[1], p);
-
-			while (!GameServer.board.gameOver()) //While the board still has '*'
+			
+			boolean value = true;
+			while (value)//!GameServer.board.gameOver()) //While the board still has '*'
 			{
 				//Game loop starts here
 				DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
@@ -72,13 +73,18 @@ public class ClientHandler implements Runnable
 					// that sent us this information
 					for (Socket s : socketList)
 					{
+						if(GameServer.board.gameOver())
+						{
+							clientOutput.writeBytes("End of game. Type quit.\n");
+							value = false;
+						}
 						if (s != connectionSock)
 						{
 							clientOutput = new DataOutputStream(s.getOutputStream());
 							clientOutput.writeBytes(GameServer.board.getBoard() + "\n");
 							clientOutput.writeBytes(p.printScore() + "\n");
 							clientOutput.writeBytes("Up, Down, Left, Right?\n");
-							clientOutput.writeBytes("Player " + player + ": " + clientText + "\n");
+							//clientOutput.writeBytes("Player " + player + ": " + clientText + "\n");
 						}
 					}
 				}
@@ -93,7 +99,10 @@ public class ClientHandler implements Runnable
 				}
 			}//end of while loop
 			DataOutputStream clientOutput = new DataOutputStream(connectionSock.getOutputStream());
-			clientOutput.writeBytes("Game Over, all souls collected. Good job!");
+			for(Socket s : socketList)
+			{
+				clientOutput.writeBytes("All souls collected. Type \"quit.\" Good job!\n");
+			}
 		}
 		catch (Exception e)
 		{
